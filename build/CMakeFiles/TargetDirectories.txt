@@ -1,1 +1,0 @@
-/home/viktor/MyWorks/OpenCV_CUDA_Mandelbrot_Zoomer/build/CMakeFiles/MandelbrotExplorer.dir
