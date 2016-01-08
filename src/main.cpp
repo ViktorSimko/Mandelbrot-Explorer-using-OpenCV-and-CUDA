@@ -10,7 +10,7 @@ using namespace std;
 using namespace cv;
 
 int width = 1024, height = 1024, maxIter = 250;
-double cx0 = -2, cy0 = 1.5, cx1 = 1, cy1 = -1.5;
+double cx0 = -2, cy0 = -1.5, cx1 = 1, cy1 = 1.5;
 
 Mat output(width, height, CV_8UC3);
 
@@ -19,7 +19,7 @@ bool isImgCorrect = false;
 
 void reset()
 {
-    cx0 = -2; cy0 = 1.5; cx1 = 1; cy1 = -1.5;
+    cx0 = -2; cy0 = -1.5; cx1 = 1; cy1 = 1.5;
     maxIter = 250;
     isImgCorrect = false;
 }
@@ -89,11 +89,11 @@ void mouseCallBack(int event, int x, int y, int flags, void *userdata)
     {
         //cout << "LButtonUp x: " << x << "\ty: " << y << endl;
         tempcx0 = (double)rx0 / width * abs(cx0 - cx1) + min(cx0, cx1);
-        tempcy0 = (double)ry0 / height * abs(cy0 - cy1) + min(cy0, cy1);
+        tempcy0 = (double)(height - ry0) / height * abs(cy0 - cy1) + min(cy0, cy1);
         tempcx1 = (double)rx1 / width * abs(cx0 - cx1) + min(cx0, cx1);
-        tempcy1 = (double)ry1 / height * abs(cy0 - cy1) + min(cy0, cy1);
-        cx0 = tempcx0; cx1 = tempcx1;
-        cy0 = tempcy0; cy1 = tempcy1;
+        tempcy1 = (double)(height - ry1) / height * abs(cy0 - cy1) + min(cy0, cy1);
+        cx0 = min(tempcx0, tempcx1); cx1 = max(tempcx0, tempcx1);
+        cy0 = min(tempcy0, tempcy1); cy1 = max(tempcy0, tempcy1);
         cout << cx0 << ' ' << cy0 << ' ' << cx1 << ' ' << cy1 << endl;
         isImgCorrect = false;
         clicked = false;
@@ -101,7 +101,7 @@ void mouseCallBack(int event, int x, int y, int flags, void *userdata)
 
     if(event == EVENT_MOUSEMOVE && clicked)
     {
-        //cout << "MouseMove x: " << x << "\ty: " << y << endl;
+        cout << "MouseMove x: " << x << "\ty: " << y << endl;
         Mat outputTemp = output.clone();
         
         rx1 = x; ry1 = ry0 + (((ry0 - y) < 0) ? 1 : -1) * abs(rx0 - x);
