@@ -1,6 +1,8 @@
 #include "fractal.hpp"
 #include <iostream>
+#include <cmath>
 #include <cstring>
+#include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -9,6 +11,8 @@ using namespace cv;
 
 int width = 1024, height = 1024, maxIter = 250;
 double cx0 = -2, cy0 = 1.5, cx1 = 1, cy1 = -1.5;
+
+Mat output(width, height, CV_8UC3);
 
 bool clicked = false;
 bool isImgCorrect = false;
@@ -24,8 +28,6 @@ void mouseCallBack(int event, int x, int y, int flags, void *userdata);
 
 int main(int argc, char *argv[])
 {
-    Mat output(width, height, CV_8UC3);
-
     Fractal mandelbrot(cx0, cy0, cx1, cy1, width, height, maxIter);
 
     namedWindow("MandelWindow", 1);
@@ -71,23 +73,25 @@ int main(int argc, char *argv[])
 }
 
 double tempcx0, tempcy0, tempcx1, tempcy1;
+int rx0, ry0;
 
 void mouseCallBack(int event, int x, int y, int flags, void *userdata)
 {
     if(event == EVENT_LBUTTONDOWN)
     {
         cout << "LButtonDown x: " << x << "\ty: " << y << endl;
+        rx0 = x; ry0 = y;
         tempcx0 = tempcy0 = tempcx1 = tempcy1 = 0;
-        tempcx0 = (double)x / width * (cx1 - cx0) + cx0;
-        tempcy0 = (double)y / height * (cy0 - cy1) + cy1;
+        tempcx0 = (double)x / width * abs(cx0 - cx1) + min(cx0, cx1);
+        tempcy0 = (double)y / height * abs(cy0 - cy1) + min(cy0, cy1);
         clicked = true;
     }
 
     if(event == EVENT_LBUTTONUP)
     {
         cout << "LButtonUp x: " << x << "\ty: " << y << endl;
-        tempcx1 = (double)x / width * (cx1 - cx0) + cx0;
-        tempcy1 = tempcy0 - (tempcx1 - tempcx0);
+        tempcx1 = (double)x / width * abs(cx1 - cx0) + min(cx0, cx1);
+        tempcy1 = tempcy0 + (tempcx0 - tempcx1);
         cx0 = tempcx0; cx1 = tempcx1;
         cy0 = tempcy0; cy1 = tempcy1;
         isImgCorrect = false;
@@ -97,5 +101,9 @@ void mouseCallBack(int event, int x, int y, int flags, void *userdata)
     if(event == EVENT_MOUSEMOVE && clicked)
     {
         cout << "MouseMove x: " << x << "\ty: " << y << endl;
+        Mat outputTemp = output.clone();
+        rectangle(outputTemp, Point(rx0, ry0), Point(x, ry0 + rx0 - x), Scalar(255, 255, 255));
+
+        imshow("MandelWindow", outputTemp);
     }
 }
