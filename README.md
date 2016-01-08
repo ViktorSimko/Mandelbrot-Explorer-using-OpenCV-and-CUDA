@@ -1,1 +1,3 @@
-# Mandelbrot-Zoomer-using-OpenCV-and-CUDA
+# Mandelbrot Zoomer using OpenCV and CUDA
+
+
