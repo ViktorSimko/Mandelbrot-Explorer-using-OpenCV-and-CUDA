@@ -73,36 +73,39 @@ int main(int argc, char *argv[])
 }
 
 double tempcx0, tempcy0, tempcx1, tempcy1;
-int rx0, ry0;
+int rx0, ry0, rx1, ry1;
 
 void mouseCallBack(int event, int x, int y, int flags, void *userdata)
 {
     if(event == EVENT_LBUTTONDOWN)
     {
-        cout << "LButtonDown x: " << x << "\ty: " << y << endl;
+        //cout << "LButtonDown x: " << x << "\ty: " << y << endl;
         rx0 = x; ry0 = y;
         tempcx0 = tempcy0 = tempcx1 = tempcy1 = 0;
-        tempcx0 = (double)x / width * abs(cx0 - cx1) + min(cx0, cx1);
-        tempcy0 = (double)y / height * abs(cy0 - cy1) + min(cy0, cy1);
         clicked = true;
     }
 
     if(event == EVENT_LBUTTONUP)
     {
-        cout << "LButtonUp x: " << x << "\ty: " << y << endl;
-        tempcx1 = (double)x / width * abs(cx1 - cx0) + min(cx0, cx1);
-        tempcy1 = tempcy0 + (tempcx0 - tempcx1);
+        //cout << "LButtonUp x: " << x << "\ty: " << y << endl;
+        tempcx0 = (double)rx0 / width * abs(cx0 - cx1) + min(cx0, cx1);
+        tempcy0 = (double)ry0 / height * abs(cy0 - cy1) + min(cy0, cy1);
+        tempcx1 = (double)rx1 / width * abs(cx0 - cx1) + min(cx0, cx1);
+        tempcy1 = (double)ry1 / height * abs(cy0 - cy1) + min(cy0, cy1);
         cx0 = tempcx0; cx1 = tempcx1;
         cy0 = tempcy0; cy1 = tempcy1;
+        cout << cx0 << ' ' << cy0 << ' ' << cx1 << ' ' << cy1 << endl;
         isImgCorrect = false;
         clicked = false;
     }
 
     if(event == EVENT_MOUSEMOVE && clicked)
     {
-        cout << "MouseMove x: " << x << "\ty: " << y << endl;
+        //cout << "MouseMove x: " << x << "\ty: " << y << endl;
         Mat outputTemp = output.clone();
-        rectangle(outputTemp, Point(rx0, ry0), Point(x, ry0 + rx0 - x), Scalar(255, 255, 255));
+        
+        rx1 = x; ry1 = ry0 + (((ry0 - y) < 0) ? 1 : -1) * abs(rx0 - x);
+        rectangle(outputTemp, Point(rx0, ry0), Point(rx1, ry1), Scalar(255, 255, 255));
 
         imshow("MandelWindow", outputTemp);
     }
