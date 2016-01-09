@@ -25,13 +25,9 @@ static void calculateMandelbrotCPU(char *imageBuffer, double cx0, double cy0, do
 
 Fractal::Fractal(double cx0, double cy0, double cx1, double cy1, int width, int height, int maxIter)
 {
-    this->cx0 = cx0;
-    this->cy0 = cy0;
-    this->cx1 = cx1;
-    this->cy1 = cy1;
+    SetDimensions(cx0, cy1, cx1, cy1, maxIter);
     this->width = width;
     this->height = height;
-    this->maxIter = maxIter;
     this->imageBuffer = new char[width * height * 3];
 }
 

@@ -133,10 +133,12 @@ void mouseCallBack(int event, int x, int y, int flags, void *userdata)
     if(event == EVENT_LBUTTONUP)
     {
         //cout << "LButtonUp x: " << x << "\ty: " << y << endl;
-        tempcx0 = (double)rx0 / width * (cx1 - cx0) + cx0;
-        tempcy0 = (double)(height - ry0) / height * (cy1 - cy0) + cy0;
-        tempcx1 = (double)rx1 / width * (cx1 - cx0) + cx0;
-        tempcy1 = (double)(height - ry1) / height * (cy1 - cy0) + cy0;
+        rangex = cx1 - cx0;
+        rangey = cy1 - cy0;
+        tempcx0 = (double)rx0 / width * rangex + cx0;
+        tempcy0 = (double)(height - ry0) / height * rangey  + cy0;
+        tempcx1 = (double)rx1 / width * rangex + cx0;
+        tempcy1 = (double)(height - ry1) / height * rangey + cy0;
         cx0 = min(tempcx0, tempcx1); cx1 = max(tempcx0, tempcx1);
         cy0 = min(tempcy0, tempcy1); cy1 = max(tempcy0, tempcy1);
         //cout << cx0 << ' ' << cy0 << ' ' << cx1 << ' ' << cy1 << endl;
