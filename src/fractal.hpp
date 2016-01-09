@@ -3,6 +3,12 @@
 
 #include <cstdio>
 
+#ifndef __CUDACC__
+
+#include <omp.h>
+
+#endif
+
 class Fractal
 {
 public:

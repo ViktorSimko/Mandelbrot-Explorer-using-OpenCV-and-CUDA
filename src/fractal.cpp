@@ -114,9 +114,17 @@ __global__ static void calculateMandelbrot(char *imageBuffer, double cx0, double
 static void calculateMandelbrotCPU(char *imageBuffer, double cx0, double cy0, double cx1, double cy1,
                                    int width, int height, int maxIter)
 {
+    int nt, tid;
+#pragma omp parallel private(tid)
+    {
+    nt = omp_get_num_threads();
+    tid = omp_get_thread_num();
+    int kt = (tid + 1) * (height / nt);
+    int k = tid * (height / nt);
+    //printf("nt: %d", nt);
 
+    for(; k < kt; k++)
     for(int j = 0; j < width; j++)
-    for(int k = 0; k < height; k++)
     {
         int row = k;
         int col = j;
@@ -144,6 +152,8 @@ static void calculateMandelbrotCPU(char *imageBuffer, double cx0, double cy0, do
         imageBuffer[pixelId] = 255 - color % 256;//color % 256;
         imageBuffer[pixelId + 1] = 0;
         imageBuffer[pixelId + 2] = color * 5 % 256;
+    }
+    //printf("thread %d finished\n", tid);
     }
 }
 

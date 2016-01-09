@@ -65,14 +65,26 @@ int main(int argc, char *argv[])
             //cout << "z pressed" << endl;
             isImgCorrect = false;
             break;
+        case 'u':
+            rangex = cx1 - cx0;
+            rangey = cy1 - cy0;
+            tempcx0 = cx1 - ((double)5 / 4) * rangex;
+            tempcy0 = cy1 - ((double)5 / 4) * rangey;
+            cx1 = cx0 + ((double)5 / 4) * rangex;
+            cy1 = cy0 + ((double)5 / 4) * rangey;
+            cx0 = tempcx0;
+            cy0 = tempcy0;
+            //cout << "z pressed" << endl;
+            isImgCorrect = false;
+            break;
         case 'i':
             maxIter *= 2;
-            cout << maxIter << endl;
+            cout << "number of iterations: " << maxIter << endl;
             isImgCorrect = false;
             break;
         case 'd':
             maxIter /= 2;
-            cout << maxIter << endl;
+            cout << "number of iterations: " << maxIter << endl;
             isImgCorrect = false;
             break;
         case 'r':
