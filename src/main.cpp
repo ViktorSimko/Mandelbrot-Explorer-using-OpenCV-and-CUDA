@@ -53,6 +53,30 @@ int main(int argc, char *argv[])
         {
         case 'q':
             return 0;
+        case 'k':
+            rangey = cy1 - cy0;
+            cy0 += ((double)1/5) * rangey;
+            cy1 += ((double)1/5) * rangey;
+            isImgCorrect = false;
+            break;
+        case 'j':
+            rangey = cy1 - cy0;
+            cy0 -= ((double)1/5) * rangey;
+            cy1 -= ((double)1/5) * rangey;
+            isImgCorrect = false;
+            break;
+        case 'l':
+            rangex = cx1 - cx0;
+            cx0 += ((double)1/5) * rangex;
+            cx1 += ((double)1/5) * rangex;
+            isImgCorrect = false;
+            break;
+        case 'h':
+            rangex = cx1 - cx0;
+            cx0 -= ((double)1/5) * rangex;
+            cx1 -= ((double)1/5) * rangex;
+            isImgCorrect = false;
+            break;
         case 'z':
             rangex = cx1 - cx0;
             rangey = cy1 - cy0;
