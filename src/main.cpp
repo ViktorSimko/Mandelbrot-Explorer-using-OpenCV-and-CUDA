@@ -17,6 +17,8 @@ Mat output(width, height, CV_8UC3);
 bool clicked = false;
 bool isImgCorrect = false;
 
+double tempcx0, tempcy0, tempcx1, tempcy1;
+
 void reset()
 {
     cx0 = -2; cy0 = -1.5; cx1 = 1; cy1 = 1.5;
@@ -54,10 +56,12 @@ int main(int argc, char *argv[])
         case 'z':
             rangex = cx1 - cx0;
             rangey = cy1 - cy0;
-            cx0 = cx1 - ((double)4 / 5) * rangex;
-            cy0 = cy1 - ((double)4 / 5) * rangey;
+            tempcx0 = cx1 - ((double)4 / 5) * rangex;
+            tempcy0 = cy1 - ((double)4 / 5) * rangey;
             cx1 = cx0 + ((double)4 / 5) * rangex;
             cy1 = cy0 + ((double)4 / 5) * rangey;
+            cx0 = tempcx0;
+            cy0 = tempcy0;
             //cout << "z pressed" << endl;
             isImgCorrect = false;
             break;
@@ -79,7 +83,6 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-double tempcx0, tempcy0, tempcx1, tempcy1;
 int rx0, ry0, rx1, ry1;
 
 void mouseCallBack(int event, int x, int y, int flags, void *userdata)
@@ -88,17 +91,16 @@ void mouseCallBack(int event, int x, int y, int flags, void *userdata)
     {
         //cout << "LButtonDown x: " << x << "\ty: " << y << endl;
         rx0 = x; ry0 = y;
-        tempcx0 = tempcy0 = tempcx1 = tempcy1 = 0;
         clicked = true;
     }
 
     if(event == EVENT_LBUTTONUP)
     {
         //cout << "LButtonUp x: " << x << "\ty: " << y << endl;
-        tempcx0 = (double)rx0 / width * abs(cx0 - cx1) + min(cx0, cx1);
-        tempcy0 = (double)(height - ry0) / height * abs(cy0 - cy1) + min(cy0, cy1);
-        tempcx1 = (double)rx1 / width * abs(cx0 - cx1) + min(cx0, cx1);
-        tempcy1 = (double)(height - ry1) / height * abs(cy0 - cy1) + min(cy0, cy1);
+        tempcx0 = (double)rx0 / width * (cx1 - cx0) + cx0;
+        tempcy0 = (double)(height - ry0) / height * (cy1 - cy0) + cy0;
+        tempcx1 = (double)rx1 / width * (cx1 - cx0) + cx0;
+        tempcy1 = (double)(height - ry1) / height * (cy1 - cy0) + cy0;
         cx0 = min(tempcx0, tempcx1); cx1 = max(tempcx0, tempcx1);
         cy0 = min(tempcy0, tempcy1); cy1 = max(tempcy0, tempcy1);
         //cout << cx0 << ' ' << cy0 << ' ' << cx1 << ' ' << cy1 << endl;
